@@ -18,7 +18,7 @@ namespace OmgUtils.ProcessUt
 	/// <summary>
 	/// Description of ProcessUtils.
 	/// </summary>
-	public class ProcessUtils
+	public static class ProcessUtils
 	{
 		/// <summary>
 		/// Runs the given process and redirects its sdtout and stderr to a textbox, which is shown afterwards.
@@ -53,6 +53,17 @@ namespace OmgUtils.ProcessUt
 		{
 			if (bOverwrite)
 			{
+				if (sTargetDir == sPathToDir)
+				{
+					string sTemp = System.IO.Path.GetTempPath();
+					sTemp += "\\CewspTempFolder";
+					
+					FileSystem.CopyDirectory(sPathToDir, sTemp);
+					
+					sPathToDir = sTemp;
+					
+					
+				}
 				if (Directory.Exists(sTargetDir))
 					Directory.Delete(sTargetDir, true);
 			}
@@ -73,8 +84,18 @@ namespace OmgUtils.ProcessUt
 		/// <param name="bSilent">Hide progress bar? Still shows errors</param>
 		public static void CopyFile(string sSourceFile, string sTargetFile, bool bOverwrite = true, bool bSilent = false)
 		{
+			
 			if (bOverwrite)
 			{
+				if (sSourceFile == sTargetFile)
+				{
+					string sTemp = System.IO.Path.GetTempFileName();
+					
+					File.Copy(sSourceFile, sTemp);
+					
+					sSourceFile = sTemp;
+					
+				}
 				if (File.Exists(sTargetFile))
 					File.Delete(sTargetFile);
 			}
