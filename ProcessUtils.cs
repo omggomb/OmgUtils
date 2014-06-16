@@ -58,7 +58,7 @@ namespace OmgUtils.ProcessUt
 					string sTemp = System.IO.Path.GetTempPath();
 					sTemp += "\\CewspTempFolder";
 					
-					FileSystem.CopyDirectory(sPathToDir, sTemp);
+					FileSystem.CopyDirectory(sPathToDir, sTemp, true);
 					
 					sPathToDir = sTemp;
 					
@@ -91,7 +91,7 @@ namespace OmgUtils.ProcessUt
 				{
 					string sTemp = System.IO.Path.GetTempFileName();
 					
-					File.Copy(sSourceFile, sTemp);
+					File.Copy(sSourceFile, sTemp, true);
 					
 					sSourceFile = sTemp;
 					
