@@ -21,25 +21,39 @@ namespace OmgUtils.ProcessUt
 	public static class ProcessUtils
 	{
 		/// <summary>
+        /// This is syncronous!
 		/// Runs the given process and redirects its sdtout and stderr to a textbox, which is shown afterwards.
 		/// </summary>
 		/// <param name="process"></param>
-		public static void RunProcessWithRedirectedStdErrorStdOut(Process process, string sCaptionOfResultWindow)
+		public static bool RunProcessWithRedirectedStdErrorStdOut(Process process, string sCaptionOfResultWindow)
 		{
-			ProcessStartInfo info = process.StartInfo;
-			
-			info.RedirectStandardOutput = true;
-			info.RedirectStandardError = true;
-			info.UseShellExecute = false;
-			
-			process.Start();
-			
-			StreamReader stdOut = process.StandardOutput;
-			StreamReader stdError  = process.StandardError;
-			
-			string output = stdOut.ReadToEnd() + "\n" + stdError.ReadToEnd();
-			
-			UserInteractionUtils.DisplayRichTextBox(output, sCaptionOfResultWindow);
+            try
+            {
+                ProcessStartInfo info = process.StartInfo;
+
+                info.RedirectStandardOutput = true;
+                info.RedirectStandardError = true;
+                info.UseShellExecute = false;
+
+                process.EnableRaisingEvents = true;
+
+                process.Start();
+                process.WaitForExit();
+
+                StreamReader stdOut = process.StandardOutput;
+                StreamReader stdError = process.StandardError;
+
+                string output = stdOut.ReadToEnd() + "\n" + stdError.ReadToEnd();
+
+                UserInteractionUtils.DisplayRichTextBox(output, sCaptionOfResultWindow);
+                return true;
+            }
+            catch (Exception e)
+            {
+                UserInteractionUtils.ShowErrorMessageBox(e.Message);
+                return false;
+                
+            }
 		}
 		
 		/// <summary>
