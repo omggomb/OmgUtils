@@ -5,6 +5,6 @@ E:\Dropbox\ExplorerTreeView\OmgUtils\obj\Debug\OmgUtils.dll
 E:\Dropbox\ExplorerTreeView\OmgUtils\obj\Debug\OmgUtils.pdb
 E:\Dev\OmgUtils\bin\Debug\OmgUtils.dll
 E:\Dev\OmgUtils\bin\Debug\OmgUtils.pdb
-E:\Dev\OmgUtils\obj\Debug\OmgUtils.csprojResolveAssemblyReference.cache
 E:\Dev\OmgUtils\obj\Debug\OmgUtils.dll
 E:\Dev\OmgUtils\obj\Debug\OmgUtils.pdb
+E:\Dev\OmgUtils\obj\Debug\OmgUtils.csprojResolveAssemblyReference.cache

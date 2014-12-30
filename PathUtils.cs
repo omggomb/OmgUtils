@@ -134,5 +134,20 @@ namespace OmgUtils.Path
 			
 			return sFilePath;
 		}
+
+        /// <summary>
+        /// Checks whether the given path ends with \, if not adds it.
+        /// </summary>
+        /// <param name="sPath"></param>
+        /// <returns></returns>
+        public static string CheckFolderPath(string sPath)
+        {
+            string sReturn = sPath;
+
+            if (sPath[sPath.Length - 1] != '\\')
+                sReturn += '\\';
+
+            return sReturn;
+        }
 	}
 }
