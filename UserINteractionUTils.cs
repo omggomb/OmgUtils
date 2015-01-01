@@ -68,6 +68,7 @@ namespace OmgUtils.UserInteraction
 			window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
 			
 			window.Show();
+            window.Focus();
 		}
 		
 		/// <summary>
