@@ -54,6 +54,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Logger.cs" />
     <Compile Include="PathUtils.cs" />
     <Compile Include="ProcessUtils.cs" />
     <Compile Include="UserINteractionUTils.cs" />

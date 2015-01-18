@@ -7,4 +7,3 @@ E:\Dev\OmgUtils\bin\Debug\OmgUtils.dll
 E:\Dev\OmgUtils\bin\Debug\OmgUtils.pdb
 E:\Dev\OmgUtils\obj\Debug\OmgUtils.dll
 E:\Dev\OmgUtils\obj\Debug\OmgUtils.pdb
-E:\Dev\OmgUtils\obj\Debug\OmgUtils.csprojResolveAssemblyReference.cache
