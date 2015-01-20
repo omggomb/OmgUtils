@@ -77,12 +77,12 @@ namespace OmgUtils.Logging
         /// <summary>
         /// TextBlock instance to be logged to, if any
         /// </summary>
-        private TextBlock textBlock;
+        public TextBlock TextBlock { get; set; }
 
         /// <summary>
         /// RichTextBox to be logged to, if any
         /// </summary>
-        private RichTextBox richTextBox;
+        public RichTextBox RichTextBox { get; set; }
 
         /// <summary>
         /// FileInfo object created after initialisation
@@ -112,8 +112,8 @@ namespace OmgUtils.Logging
             IncludeSeverityNameInLog = true;
             UseFileLogging = true;
 
-            textBlock = null;
-            richTextBox = null;
+            TextBlock = null;
+            RichTextBox = null;
             fileInfo = null;
         }
 
@@ -138,7 +138,7 @@ namespace OmgUtils.Logging
             if (textBlock == null)
                 throw new ArgumentNullException("textBlock");
             else
-                this.textBlock = textBlock;
+                this.TextBlock = textBlock;
 
             return InitInternal(sFilePath);
         }
@@ -154,7 +154,7 @@ namespace OmgUtils.Logging
             if (richTextBox == null)
                 throw new ArgumentNullException("richTextBox");
             else
-                this.richTextBox = richTextBox;
+                this.RichTextBox = richTextBox;
 
             return InitInternal(sFilePath);
         }
@@ -167,7 +167,7 @@ namespace OmgUtils.Logging
         public bool Init(RichTextBox rtb)
         {
             if (rtb != null)
-                richTextBox = rtb;
+                RichTextBox = rtb;
             else
                 throw new ArgumentNullException("rtb");
 
@@ -184,7 +184,7 @@ namespace OmgUtils.Logging
         public bool Init(TextBlock tb)
         {
             if (tb != null)
-                textBlock = tb;
+                TextBlock = tb;
             else
                 throw new ArgumentNullException("tb");
 
@@ -263,9 +263,9 @@ namespace OmgUtils.Logging
 
         private void LogVisualTB(string sMessage, string sSeverity)
         {
-            if (textBlock != null)
+            if (TextBlock != null)
             {
-                var range = new TextRange(textBlock.ContentStart, textBlock.ContentEnd);
+                var range = new TextRange(TextBlock.ContentStart, TextBlock.ContentEnd);
                 range.Text = sMessage + "\n";
 
                 if (UseColorCoding)
@@ -284,9 +284,9 @@ namespace OmgUtils.Logging
 
         private void LogVisualRTB(string sMessage, string sSeverity)
         {
-            if (richTextBox != null)
+            if (RichTextBox != null)
             {
-                var range = new TextRange(richTextBox.Document.ContentEnd, richTextBox.Document.ContentEnd);
+                var range = new TextRange(RichTextBox.Document.ContentEnd, RichTextBox.Document.ContentEnd);
                 range.Text = "\n" + sMessage;
 
                 if (UseColorCoding)
@@ -299,7 +299,7 @@ namespace OmgUtils.Logging
                     range.ApplyPropertyValue(TextElement.ForegroundProperty, brush);
                 }
 
-                richTextBox.ScrollToEnd();
+                RichTextBox.ScrollToEnd();
 
             }
         }
