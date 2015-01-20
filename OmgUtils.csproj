@@ -54,9 +54,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationSettingsClass\Setting.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="PathUtils.cs" />
     <Compile Include="ProcessUtils.cs" />
+    <Compile Include="ApplicationSettingsClass\SettingsManager.cs" />
     <Compile Include="UserINteractionUTils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
