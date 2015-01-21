@@ -40,6 +40,8 @@ namespace OmgUtils.ApplicationSettingsManagement
         /// </summary>
         public object Value { get; set; }
 
+     
+
         /// <summary>
         /// Converts the given type string to a typecode
         /// </summary>
@@ -122,7 +124,7 @@ namespace OmgUtils.ApplicationSettingsManagement
      
 
         /// <summary>
-        /// If the valutypes are the same, returns the value of the type T
+        /// If the valutypes are the same, returns the value of the type T, else returns default(T)
         /// </summary>
         /// <typeparam name="T">Desired type of the settings value</typeparam>
         /// <returns></returns>
@@ -141,12 +143,38 @@ namespace OmgUtils.ApplicationSettingsManagement
             }
         }
 
+        // <summary>
+        /// If the valutypes are the same, returns the value of the type T, else returns default(T)
+        /// </summary>
+        /// <typeparam name="T">Desired type of the settings value</typeparam>
+        /// <returns></returns>
         public T GetValue<T>()
         {
             bool bDummy = false;
             return GetValue<T>(out bDummy);
         }
 
+        /// <summary>
+        /// If valuetypes are the same, sets new value, else returns false
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public bool SetValue<T>(T value)
+        {
+            if (Type.GetTypeCode(typeof(T)) != ValueType)
+                return false;
+            else
+            {
+                Value = (object)value;
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Feeds the string into the appropriate parse function
+        /// </summary>
+        /// <param name="sValueAsString"></param>
         public void SetValueFromString(string sValueAsString)
         {
             if (ValueType == TypeCode.Boolean)
@@ -158,5 +186,9 @@ namespace OmgUtils.ApplicationSettingsManagement
             else if (ValueType == TypeCode.String)
                 Value = sValueAsString;
         }
+
+        
     }
+
+   
 }

@@ -205,26 +205,51 @@ namespace OmgUtils.ApplicationSettingsManagement
         /// </summary>
         /// <param name="sIdentName"></param>
         /// <returns></returns>
-        public Setting GetValue(string sIdentName)
+        public Setting GetSetting(string sIdentName)
         {
             Setting output = null;
 
             if (ApplicationSettings.TryGetValue(sIdentName, out output))
                 return output;
             else
+            {
+                if (bHasLogger)
+                {
+                    loggerInstance.LogWarning("[SettingsManager:218] Trying to get setting: '" + sIdentName + "' which doesn't exist");
+                }
                 return null;
+            }
         }
 
         /// <summary>
-        /// Sets the given value, or creates it if not present
+        /// Add a new setting to the collection
         /// </summary>
-        /// <param name="setting"></param>
-        /// <param name="bCreate"></param>
-        /// <returns></returns>
-        public bool SetValue(Setting setting, bool bCreate = true)
+        /// <param name="setting">The setting to be added</param>
+        /// <param name="bOverride">If setting exists, override?</param>
+        /// <returns>True on success else false</returns>
+        public bool AddSetting(Setting setting, bool bOverride = true)
         {
+            if (ApplicationSettings.ContainsKey(setting.IdentificationName))
+            {
+                if (bOverride)
+                {
+                    ApplicationSettings.Remove(setting.IdentificationName);
+                }
+                else
+                {
+                    if (bHasLogger)
+                    {
+                        loggerInstance.LogWarning("[SettingsManager:230] Tryíng to add setting that already exists!");
+                        return false;
+                    }
+                }
+            }
+
+            ApplicationSettings.Add(setting.IdentificationName, setting);
             return true;
         }
+
+        
 
     }
 }
