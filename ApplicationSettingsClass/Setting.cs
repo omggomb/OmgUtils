@@ -8,7 +8,7 @@ namespace OmgUtils.ApplicationSettingsManagement
     /// <summary>
     /// Represents a single setting inside an application
     /// </summary>
-    public class Setting
+    public abstract class Setting
     {
         /// <summary>
         /// The string used to identify the setting
@@ -30,165 +30,187 @@ namespace OmgUtils.ApplicationSettingsManagement
         /// </summary>
         public string Description { get; set; }
 
-        /// <summary>
-        /// String determining the type of the setting's value
-        /// </summary>
-        public TypeCode ValueType { get; set; }
+    
+       
 
-        /// <summary>
-        /// The value of the setting stored as a object
-        /// </summary>
-        public object Value { get; set; }
-
-     
-
-        /// <summary>
-        /// Converts the given type string to a typecode
-        /// </summary>
-        /// <param name="sTypeString">The string describing the type</param>
-        /// <returns>The matching typecode</returns>
-        public static TypeCode GetTypeFromTypeString(string sTypeString)
+        public Setting()
         {
-            switch (sTypeString)
-            {
-                case ("bool"):
-                    return TypeCode.Boolean;
-                   
-                case("int"):
-                    return TypeCode.Int32;
-
-                case ("double"):
-                    return TypeCode.Double;
-
-                case ("string"):
-                    return TypeCode.String;
-                    
-                default:
-                    return TypeCode.Empty;
-                    
-            }
+            IdentificationName = "";
+            HumanReadableName = "";
+            Category = "";
+            Description =  "";
         }
 
         /// <summary>
-        /// Converts a typecode to a typestring
+        /// Returns the type of the setting as string
         /// </summary>
-        /// <param name="code">The typecode to be converted</param>
-        /// <returns>The matching string</returns>
-        public static string GetTypeStringFromCode(TypeCode code)
-        {
-            switch (code)
-            {
-                case TypeCode.Boolean:
-                    return "bool";
-                    
-               
-                case TypeCode.Double:
-                    return "double";
-                    
-                
-                case TypeCode.Int32:
-                    return "int";
-             
-                case TypeCode.String:
-                    return "string";
-            
-                default:
-                    return "empty";
-                  
-            }
-        }
-
-        /// <summary>
-        /// Checks if the given setting is exactly equal to this one
-        /// </summary>
-        /// <param name="obj"></param>
         /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            if (obj is Setting)
-            {
-                var o = obj as Setting;
-
-                if (IdentificationName == o.IdentificationName &&
-                    HumanReadableName == o.HumanReadableName &&
-                    ValueType == o.ValueType &&
-                    Value == o.Value &&
-                    Category == o.Category)
-                    return true;
-                   
-            }
-
-            return false;
-        }
-
-     
+        public abstract string GetTypeAsString();
 
         /// <summary>
-        /// If the valutypes are the same, returns the value of the type T, else returns default(T)
+        /// Sets the settings value by trying to parse the given string
         /// </summary>
-        /// <typeparam name="T">Desired type of the settings value</typeparam>
+        /// <param name="sValue"></param>
         /// <returns></returns>
-        public T GetValue<T>(out bool bSucces)
+        public virtual bool SetFromString(string sValue)
         {
-            var t = typeof(T);
-            if (Type.GetTypeCode(t) == ValueType)
-            {
-                bSucces = true;
-                return (T)Value;
-            }
-            else
-            {
-                bSucces = false;
-                return default(T);
-            }
-        }
-
-        // <summary>
-        /// If the valutypes are the same, returns the value of the type T, else returns default(T)
-        /// </summary>
-        /// <typeparam name="T">Desired type of the settings value</typeparam>
-        /// <returns></returns>
-        public T GetValue<T>()
-        {
-            bool bDummy = false;
-            return GetValue<T>(out bDummy);
-        }
-
-        /// <summary>
-        /// If valuetypes are the same, sets new value, else returns false
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public bool SetValue<T>(T value)
-        {
-            if (Type.GetTypeCode(typeof(T)) != ValueType)
+            if (sValue == null)
                 return false;
-            else
-            {
-                Value = (object)value;
-                return true;
-            }
+
+            return true;
         }
 
         /// <summary>
-        /// Feeds the string into the appropriate parse function
+        /// Returns the value as a string
         /// </summary>
-        /// <param name="sValueAsString"></param>
-        public void SetValueFromString(string sValueAsString)
-        {
-            if (ValueType == TypeCode.Boolean)
-                Value = Boolean.Parse(sValueAsString);
-            else if (ValueType == TypeCode.Int32)
-                Value = Int32.Parse(sValueAsString);
-            else if (ValueType == TypeCode.Double)
-                Value = Double.Parse(sValueAsString);
-            else if (ValueType == TypeCode.String)
-                Value = sValueAsString;
-        }
-
-        
+        /// <returns></returns>
+        public abstract string GetValueAsString();
     }
 
-   
+    /// <summary>
+    /// A setting containing an integer
+    /// </summary>
+    public class IntSetting : Setting
+    {
+        /// <summary>
+        /// The value of the setting
+        /// </summary>
+        public int  Value { get; set; }
+
+        public override string GetTypeAsString()
+        {
+            return "int";
+        }
+
+        public override bool SetFromString(string sValue)
+        {
+            if (!base.SetFromString(sValue))
+                return false;
+            int res = 0;
+            if (int.TryParse(sValue, out res))
+            {
+                Value = res;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public override string GetValueAsString()
+        {
+            return Value.ToString();
+        }
+    }
+
+    /// <summary>
+    /// A setting containing a float
+    /// </summary>
+    public class FloatSetting : Setting
+    {
+        /// <summary>
+        /// The value of the setting
+        /// </summary>
+        public float Value { get; set; }
+
+        public override string GetTypeAsString()
+        {
+            return "float";
+        }
+
+        public override bool SetFromString(string sValue)
+        {
+            if (!base.SetFromString(sValue))
+                return false;
+            float res = 0;
+            if (float.TryParse(sValue, out res))
+            {
+                Value = res;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public override string GetValueAsString()
+        {
+            return Value.ToString();
+        }
+    }
+
+    /// <summary>
+    /// A setting containing a bool
+    /// </summary>
+    public class BoolSetting : Setting
+    {
+        /// <summary>
+        /// The value of the setting  
+        /// </summary>
+        public bool Value { get; set; }
+
+        public override string GetTypeAsString()
+        {
+            return "bool";
+        }
+
+        public override bool SetFromString(string sValue)
+        {
+            if (!base.SetFromString(sValue))
+                return false;
+            bool res = false;
+            if (bool.TryParse(sValue, out res))
+            {
+                Value = res;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public override string GetValueAsString()
+        {
+            return Value.ToString();
+        }
+    }
+
+    /// <summary>
+    /// A setting containing a string
+    /// </summary>
+    public class StringSetting : Setting
+    {
+        /// <summary>
+        /// The value of the setting  
+        /// </summary>
+        /// 
+        public string Value { get; set; }
+        public override string GetTypeAsString()
+        {
+            return "string";
+        }
+
+        public override bool SetFromString(string sValue)
+        {
+            if (!base.SetFromString(sValue))
+                return false;
+
+            Value = sValue;
+            return true;
+        }
+
+        public override string GetValueAsString()
+        {
+            return Value;
+        }
+    }
+
+
+
+
+     
+
 }

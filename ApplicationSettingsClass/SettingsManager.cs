@@ -71,26 +71,55 @@ namespace OmgUtils.ApplicationSettingsManagement
                     {
                         case XmlNodeType.Element:
                             {
-                                if (reader.Name == "Setting")
+                                if (reader.LocalName == "Setting")
                                 {
                                     // XML Structure expected:
                                     // Settings
                                     //     Setting identificationName humanReadableName description category value typeAsString
 
-                                    var set = new Setting();
-
-                                    set.IdentificationName = reader.GetAttribute("identificationName");
-                                    set.HumanReadableName = reader.GetAttribute("humanReadableName");
-                                    set.Description = reader.GetAttribute("description");
-                                    set.Category = reader.GetAttribute("category");
-
                                     string typeAsString = reader.GetAttribute("typeAsString");
-                                    set.ValueType = Setting.GetTypeFromTypeString(typeAsString);
+                                    string identificationName = reader.GetAttribute("identificationName");
+                                    string humanReadableName = reader.GetAttribute("humanReadableName");
+                                    string description = reader.GetAttribute("description");
+                                    string category = reader.GetAttribute("category");
+                                    string val = reader.GetAttribute("value");
 
-                                    string valueAsString = reader.GetAttribute("value");
-                                    set.SetValueFromString(valueAsString);
+                                    Setting set = null;
 
-                                    ApplicationSettings.Add(set.IdentificationName, set);
+                                    // A little ugly 
+                                    switch (typeAsString)
+                                    {
+                                        case "int":
+                                            set = new IntSetting();
+                                            break;
+                                        case "bool":
+                                            set = new BoolSetting();
+                                            break;
+                                        case "float":
+                                            set = new FloatSetting();
+                                            break;
+                                        case "string":
+                                            set = new StringSetting();
+                                            break;
+                                        default:
+                                            {
+                                                if (bHasLogger)
+                                                {
+                                                    loggerInstance.LogWarning("[SettingsManager] Unrecognised type while loading settings: " + typeAsString);
+                                                }
+                                            }
+                                            break;
+                                    }
+
+                                    if (set != null)
+                                    {
+                                        set.IdentificationName = identificationName;
+                                        set.HumanReadableName = humanReadableName;
+                                        set.Category = category;
+                                        set.Description = description;
+                                        set.SetFromString(val);
+                                        ApplicationSettings.Add(identificationName, set);
+                                    }
                                 }
                             } break;
                         default:
@@ -166,14 +195,13 @@ namespace OmgUtils.ApplicationSettingsManagement
                     // Settings
                     //     Setting identificationName humanReadableName description category value typeAsString
                     writer.WriteStartElement("Setting");
+
                     writer.WriteAttributeString("identificationName", set.IdentificationName);
                     writer.WriteAttributeString("humanReadableName", set.HumanReadableName);
-              
                     writer.WriteAttributeString("description", set.Description);
                     writer.WriteAttributeString("category", set.Category);
-
-                    writer.WriteAttributeString("value", (set.Value != null) ? set.Value.ToString() : "null");
-                    writer.WriteAttributeString("typeAsString", Setting.GetTypeStringFromCode(set.ValueType));
+                    writer.WriteAttributeString("typeAsString", set.GetTypeAsString());
+                    writer.WriteAttributeString("value", set.GetValueAsString());
 
                     writer.WriteEndElement();
                 }
