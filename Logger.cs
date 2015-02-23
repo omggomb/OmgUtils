@@ -246,10 +246,11 @@ namespace OmgUtils.Logging
 
             try
             {
-                fileInfo = new FileInfo(sPathToFile);
+                if (File.Exists(sPathToFile))
+                    File.Delete(sPathToFile);
 
-                if (!fileInfo.Exists)
-                    fileInfo.Create();
+                File.Create(sPathToFile).Close();
+                fileInfo = new FileInfo(sPathToFile);
 
             }
             catch (Exception)
