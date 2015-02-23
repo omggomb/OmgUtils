@@ -267,7 +267,7 @@ namespace OmgUtils.Logging
             if (TextBlock != null)
             {
                 var range = new TextRange(TextBlock.ContentStart, TextBlock.ContentEnd);
-                range.Text = sMessage + "\n";
+                range.Text += sMessage + "\n";
 
                 if (UseColorCoding)
                 {
