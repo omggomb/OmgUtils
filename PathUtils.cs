@@ -25,6 +25,9 @@ namespace OmgUtils.Path
 		/// <returns></returns>
 		public static string GetFilename(string path)
 		{
+            if (IsEmpty(path))
+                return path;
+
 			int dirPos = path.LastIndexOf('\\');
 			
 			dirPos = (dirPos == -1) ? 0 : dirPos;
@@ -68,6 +71,9 @@ namespace OmgUtils.Path
 		/// <returns></returns>
 		public static string ChangeExtension(string sTargetPath, string sNewExtensionWithDot)
 		{
+            if (IsEmpty(sTargetPath))
+                return sTargetPath;
+            
 			string noExtension = RemoveExtension(sTargetPath);
 			
 			if (sTargetPath != noExtension)
@@ -85,6 +91,9 @@ namespace OmgUtils.Path
 		/// <returns></returns>
 		public static string GetFilePath(string fullFilePath)
 		{
+            if (IsEmpty(fullFilePath))
+                return fullFilePath;
+
 			int lastDirPos = fullFilePath.LastIndexOf('\\');
 			
 			if (lastDirPos != -1)
@@ -102,6 +111,9 @@ namespace OmgUtils.Path
 		/// <returns></returns>
 		public static string RemoveExtension(string sFilePath)
 		{
+            if (IsEmpty(sFilePath))
+                return sFilePath;
+
 			int dotPos = sFilePath.LastIndexOf('.');
 			
 			if (dotPos > 0) // meaning != -1 and != 0 (0 would mean it's a relative path)
@@ -118,7 +130,10 @@ namespace OmgUtils.Path
 		/// <param name="sFilePath"></param>
 		/// <returns></returns>
 		public static string GetExtension(string sFilePath)
-		{
+        {
+            if (IsEmpty(sFilePath))
+                return sFilePath;
+
 			int lastDir = sFilePath.LastIndexOf('\\');
 			int lastDot = sFilePath.LastIndexOf('.');
 			
@@ -142,12 +157,20 @@ namespace OmgUtils.Path
         /// <returns></returns>
         public static string CheckFolderPath(string sPath)
         {
+            if (IsEmpty(s))
+                return sPath;
+
             string sReturn = sPath;
 
             if (sPath[sPath.Length - 1] != '\\')
                 sReturn += '\\';
 
             return sReturn;
+        }
+
+        static bool IsEmpty(string s)
+        {
+            return string.IsNullOrWhiteSpace(s);
         }
 	}
 }
