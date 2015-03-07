@@ -157,7 +157,7 @@ namespace OmgUtils.Path
         /// <returns></returns>
         public static string CheckFolderPath(string sPath)
         {
-            if (IsEmpty(s))
+            if (IsEmpty(sPath))
                 return sPath;
 
             string sReturn = sPath;
