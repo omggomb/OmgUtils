@@ -32,6 +32,9 @@ namespace TestingApp
             log.LogInfo("Hello");
             log.LogError("Bye");
             log.LogWarning("Omagad");
+
+            var cfg = new OmgUtils.CFGFileParser(log);
+            cfg.Parse(".\\test.cfg");
         }
     }
 }

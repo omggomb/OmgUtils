@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationSettingsClass\Setting.cs" />
+    <Compile Include="CFGFileParser.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="PathUtils.cs" />
     <Compile Include="ProcessUtils.cs" />
