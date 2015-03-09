@@ -35,6 +35,7 @@ namespace TestingApp
 
             var cfg = new OmgUtils.CFGFileParser(log);
             cfg.Parse(".\\test.cfg");
+            cfg.SetValue("g_myAnus", "Not cool");
         }
     }
 }

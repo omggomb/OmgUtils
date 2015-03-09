@@ -19,6 +19,7 @@ namespace OmgUtils
 
         Logging.Logger m_loggerInstance;
         string m_sFileName;
+        bool m_bInitialized;
 
         /// <summary>
         /// Creates a new instance of the cfg parser.
@@ -29,6 +30,7 @@ namespace OmgUtils
             Results = new Dictionary<string, string>();
             m_loggerInstance = loggingInstance;
             m_sFileName = "";
+            m_bInitialized = false;
         }
 
         /// <summary>
@@ -36,7 +38,7 @@ namespace OmgUtils
         /// </summary>
         /// <param name="sFileName">Full path to the file</param>
         /// <returns>True if successfully parsed, else false (will succeed as long as the file could be openened and read)</returns>
-        public bool Parse(string sFileName)
+        public bool Parse(string sFileName, bool bCreateNew = true)
         {
             StreamReader reader = null;
             bool bSuccess = false;
@@ -45,12 +47,24 @@ namespace OmgUtils
 
             try
             {
+                if (!File.Exists(sFileName) && bCreateNew)
+                {
+                    File.Create(sFileName).Close();
+                }
+                else if (!File.Exists(sFileName))
+                {
+                    Log(string.Format("[CFGParser] Tried parsing file '{0}', but it does not exist and bCreateNew is false", sFileName),
+                        Logging.DefaultSeverityLevels.SL_Error);
+                    return false;
+                }
                 reader = new StreamReader(File.OpenRead(sFileName));
 
                 while (reader.EndOfStream == false)
                 {
                     ParseLine(reader.ReadLine());
                 }
+
+                reader.Close();
                 bSuccess = true;
             }
             catch (Exception e)
@@ -69,15 +83,99 @@ namespace OmgUtils
                     reader.Close();
             }
 
-            return bSuccess;
+            return m_bInitialized = bSuccess;
+        }
+
+        public bool SetValue(string sKey, string sValue, bool bCreate = true)
+        {
+            if (!m_bInitialized)
+            {
+                Log(string.Format("[CFGParser] Tried setting key '{0}' before file was parsed", sKey),
+                    Logging.DefaultSeverityLevels.SL_Error);
+                return false;
+            }
+
+            if (Results.ContainsKey(sKey))
+            {
+                Results[sKey] = sValue;
+            }
+            else
+            {
+                if (bCreate)
+                {
+                    Results.Add(sKey, sValue);
+                }
+                else
+                {
+                    Log(String.Format("[CFGParser] Tried setting value {0} for key {1}, but key does not exist and bCreate is false", sValue, sKey),
+                        Logging.DefaultSeverityLevels.SL_Warning);
+                    return false;
+                }
+            }
+
+            WriteCFGFile();
+
+            return true;
+        }
+
+        void WriteCFGFile()
+        {
+            StreamReader reader = null;
+            StreamWriter writer = null;
+            try
+            {
+                reader = new StreamReader(File.OpenRead(m_sFileName));
+
+                string sFinalFile = "";
+
+                while (reader.EndOfStream == false)
+                {
+                    string sLine = reader.ReadLine();
+
+                    foreach (var key in Results.Keys)
+                    {
+                        if (sLine.Contains(key))
+                        {
+                            sFinalFile += key + "=" + Results[key] + Environment.NewLine;
+                        }
+                        else
+                            sFinalFile += sLine + Environment.NewLine;
+                    }
+                }
+
+                reader.Close();
+
+                writer = new StreamWriter(File.OpenWrite(m_sFileName));
+
+                writer.Write(sFinalFile);
+
+                writer.Close();
+            }
+            catch (Exception e)
+            {
+                if (m_loggerInstance != null)
+                {
+                    m_loggerInstance.LogError(e.Message);
+                }
+                else
+                    throw;
+            }
+            finally
+            {
+                if (reader != null)
+                    reader.Close();
+
+                if (writer != null)
+                    writer.Close();
+            }
         }
 
         void ParseLine(string sLine)
         {
             sLine = sLine.Trim();
 
-            // Simply ignore comments
-            if (sLine.StartsWith("//"))
+            // Simply ignore comments and emtpy lines
+            if (sLine.StartsWith("//") || string.IsNullOrWhiteSpace(sLine))
             {
                 return;
             }
