@@ -126,26 +126,44 @@ namespace OmgUtils
             {
                 reader = new StreamReader(File.OpenRead(m_sFileName));
 
+                // Contains all keys that were present in the file already
+                var writtenVariables = new List<string>();
+
                 string sFinalFile = "";
 
                 while (reader.EndOfStream == false)
                 {
                     string sLine = reader.ReadLine();
+               
 
+                    // check if the line contains a known variable, if yes substitute the whole line
+                    // If not, do nothing
                     foreach (var key in Results.Keys)
                     {
                         if (sLine.Contains(key))
                         {
-                            sFinalFile += key + "=" + Results[key] + Environment.NewLine;
+                            sLine = key + "=" + Results[key];
+                            writtenVariables.Add(key);
+                           break;
                         }
-                        else
-                            sFinalFile += sLine + Environment.NewLine;
                     }
+
+                    sFinalFile += sLine + Environment.NewLine;
                 }
 
                 reader.Close();
 
+                // Now append all new settings
+                foreach (var key in Results.Keys)
+                {
+                    if (!writtenVariables.Contains(key))
+                        sFinalFile += key + "=" + Results[key] + Environment.NewLine;
+                }
+
                 writer = new StreamWriter(File.OpenWrite(m_sFileName));
+
+                // Needed to clear all previous content of the file.
+                writer.BaseStream.SetLength(0);
 
                 writer.Write(sFinalFile);
 
