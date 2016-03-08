@@ -39,6 +39,14 @@ namespace OmgUtils.ApplicationSettingsManagement
         /// </summary>
         private bool bHasLogger;
 
+        public Setting this[string sKey]
+        {
+            get
+            {
+                return GetSetting(sKey);
+            }
+        }
+
         /// <summary>
         /// If loggerInstance is not null, the manager will use logger to communicate
         /// errors and warnings, else errors will cause exceptions

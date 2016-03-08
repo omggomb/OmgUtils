@@ -10,6 +10,10 @@ namespace OmgUtils.ApplicationSettingsManagement
     /// </summary>
     public abstract class Setting
     {
+        public const string TYPE_STRING = "string";
+        public const string TYPE_INT = "int";
+        public const string TYPE_FLOAT = "float";
+        public const string TYPE_BOOL = "bool";
         /// <summary>
         /// The string used to identify the setting
         /// </summary>
@@ -65,6 +69,135 @@ namespace OmgUtils.ApplicationSettingsManagement
         /// </summary>
         /// <returns></returns>
         public abstract string GetValueAsString();
+
+        #region Conversion operators
+
+        public static explicit operator int(Setting s)
+        {
+            string settingsType = s.GetTypeAsString();
+
+           switch (settingsType)
+            {
+                case TYPE_INT:
+                    {
+                        return int.Parse(s.GetValueAsString());
+                    }
+                case TYPE_FLOAT:
+                    {
+                        float f = float.Parse(s.GetValueAsString());
+                        return (int)f;
+                    }
+                case TYPE_BOOL:
+                    {
+                        bool b = bool.Parse(s.GetValueAsString());
+                        return b ? 1 : 0;
+                    }
+                case TYPE_STRING:
+                    {
+                        return int.Parse(s.GetValueAsString());
+                    }
+                default:
+                    {
+                        throw new InvalidCastException("Setting has unknown type and cannot be cast to int");
+                    }
+            }
+        }
+
+        public static explicit operator float(Setting s)
+        {
+            string settingsType = s.GetTypeAsString();
+
+            switch (settingsType)
+            {
+                case TYPE_INT:
+                    {
+                        return int.Parse(s.GetValueAsString());
+                    }
+                case TYPE_FLOAT:
+                    {
+                        float f = float.Parse(s.GetValueAsString());
+                        return f;
+                    }
+                case TYPE_BOOL:
+                    {
+                        bool b = bool.Parse(s.GetValueAsString());
+                        return b ? 1 : 0;
+                    }
+                case TYPE_STRING:
+                    {
+                        return float.Parse(s.GetValueAsString());
+                    }
+                default:
+                    {
+                        throw new InvalidCastException("Setting has unknown type and cannot be cast to int");
+                    }
+            }
+        }
+
+       
+
+        public static explicit operator bool(Setting s)
+        {
+            string settingsType = s.GetTypeAsString();
+
+            switch (settingsType)
+            {
+                case TYPE_INT:
+                    {
+                        return int.Parse(s.GetValueAsString()) == 0 ? false : true;
+                    }
+                case TYPE_FLOAT:
+                    {
+                        float f = float.Parse(s.GetValueAsString());
+                        return f == 0 ? false : true ;
+                    }
+                case TYPE_BOOL:
+                    {
+                        bool b = bool.Parse(s.GetValueAsString());
+                        return b;
+                    }
+                case TYPE_STRING:
+                    {
+                        return bool.Parse(s.GetValueAsString());
+                    }
+                default:
+                    {
+                        throw new InvalidCastException("Setting has unknown type and cannot be cast to int");
+                    }
+            }
+        }
+
+        public static explicit operator string(Setting s)
+        {
+            string settingsType = s.GetTypeAsString();
+
+            switch (settingsType)
+            {
+                case TYPE_INT:
+                    {
+                        return int.Parse(s.GetValueAsString()).ToString();
+                    }
+                case TYPE_FLOAT:
+                    {
+                        return float.Parse(s.GetValueAsString()).ToString();
+                    }
+                case TYPE_BOOL:
+                    {
+                        return bool.Parse(s.GetValueAsString()).ToString();
+                        
+                    }
+                case TYPE_STRING:
+                    {
+                        return s.GetValueAsString();
+                    }
+                default:
+                    {
+                        throw new InvalidCastException("Setting has unknown type and cannot be cast to int");
+                    }
+            }
+        }
+
+        #endregion
     }
 
     /// <summary>
@@ -79,7 +212,7 @@ namespace OmgUtils.ApplicationSettingsManagement
 
         public override string GetTypeAsString()
         {
-            return "int";
+            return TYPE_INT;
         }
 
         public override bool SetFromString(string sValue)
@@ -116,7 +249,7 @@ namespace OmgUtils.ApplicationSettingsManagement
 
         public override string GetTypeAsString()
         {
-            return "float";
+            return TYPE_FLOAT;
         }
 
         public override bool SetFromString(string sValue)
@@ -153,7 +286,7 @@ namespace OmgUtils.ApplicationSettingsManagement
 
         public override string GetTypeAsString()
         {
-            return "bool";
+            return TYPE_BOOL;
         }
 
         public override bool SetFromString(string sValue)
@@ -190,7 +323,7 @@ namespace OmgUtils.ApplicationSettingsManagement
         public string Value { get; set; }
         public override string GetTypeAsString()
         {
-            return "string";
+            return TYPE_STRING;
         }
 
         public override bool SetFromString(string sValue)
@@ -207,10 +340,4 @@ namespace OmgUtils.ApplicationSettingsManagement
             return Value;
         }
     }
-
-
-
-
-     
-
 }

@@ -32,6 +32,10 @@ namespace TestingApp
             log.LogInfo("Hello");
             log.LogError("Bye");
             log.LogWarning("Omagad");
+            object number = "Hello!";
+            var lel = number.GetType();
+            Type.GetTypeCode(lel);
+            log.LogInfo(lel.ToString());
 
             var cfg = new OmgUtils.CFGFileParser(log);
             cfg.Parse(".\\test.cfg");
