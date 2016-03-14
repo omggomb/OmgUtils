@@ -14,6 +14,7 @@ namespace OmgUtils.ApplicationSettingsManagement
         public const string TYPE_INT = "int";
         public const string TYPE_FLOAT = "float";
         public const string TYPE_BOOL = "bool";
+
         /// <summary>
         /// The string used to identify the setting
         /// </summary>
@@ -34,15 +35,12 @@ namespace OmgUtils.ApplicationSettingsManagement
         /// </summary>
         public string Description { get; set; }
 
-    
-       
-
         public Setting()
         {
             IdentificationName = "";
             HumanReadableName = "";
             Category = "";
-            Description =  "";
+            Description = "";
         }
 
         /// <summary>
@@ -76,7 +74,7 @@ namespace OmgUtils.ApplicationSettingsManagement
         {
             string settingsType = s.GetTypeAsString();
 
-           switch (settingsType)
+            switch (settingsType)
             {
                 case TYPE_INT:
                     {
@@ -134,8 +132,6 @@ namespace OmgUtils.ApplicationSettingsManagement
             }
         }
 
-       
-
         public static explicit operator bool(Setting s)
         {
             string settingsType = s.GetTypeAsString();
@@ -149,7 +145,7 @@ namespace OmgUtils.ApplicationSettingsManagement
                 case TYPE_FLOAT:
                     {
                         float f = float.Parse(s.GetValueAsString());
-                        return f == 0 ? false : true ;
+                        return f == 0 ? false : true;
                     }
                 case TYPE_BOOL:
                     {
@@ -184,7 +180,6 @@ namespace OmgUtils.ApplicationSettingsManagement
                 case TYPE_BOOL:
                     {
                         return bool.Parse(s.GetValueAsString()).ToString();
-                        
                     }
                 case TYPE_STRING:
                     {
@@ -197,7 +192,12 @@ namespace OmgUtils.ApplicationSettingsManagement
             }
         }
 
-        #endregion
+        #endregion Conversion operators
+
+        public override string ToString()
+        {
+            return IdentificationName + "=" + GetValueAsString();
+        }
     }
 
     /// <summary>
@@ -208,7 +208,7 @@ namespace OmgUtils.ApplicationSettingsManagement
         /// <summary>
         /// The value of the setting
         /// </summary>
-        public int  Value { get; set; }
+        public int Value { get; set; }
 
         public override string GetTypeAsString()
         {
@@ -280,7 +280,7 @@ namespace OmgUtils.ApplicationSettingsManagement
     public class BoolSetting : Setting
     {
         /// <summary>
-        /// The value of the setting  
+        /// The value of the setting
         /// </summary>
         public bool Value { get; set; }
 
@@ -317,10 +317,11 @@ namespace OmgUtils.ApplicationSettingsManagement
     public class StringSetting : Setting
     {
         /// <summary>
-        /// The value of the setting  
+        /// The value of the setting
         /// </summary>
-        /// 
+        ///
         public string Value { get; set; }
+
         public override string GetTypeAsString()
         {
             return TYPE_STRING;

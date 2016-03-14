@@ -11,8 +11,8 @@ namespace OmgUtils.ApplicationSettingsManagement.Tests
     [TestClass()]
     public class SettingTests
     {
-
         #region INT
+
         [TestMethod()]
         public void SettingTestIntInt()
         {
@@ -103,9 +103,10 @@ namespace OmgUtils.ApplicationSettingsManagement.Tests
             Assert.AreEqual(value.ToString(), convSetting);
         }
 
-        #endregion
+        #endregion INT
 
         #region FLOAT
+
         [TestMethod()]
         public void SettingTestFloatInt()
         {
@@ -195,7 +196,8 @@ namespace OmgUtils.ApplicationSettingsManagement.Tests
 
             Assert.AreEqual(value.ToString(), convSetting);
         }
-        #endregion
+
+        #endregion FLOAT
 
         #region BOOL
 
@@ -251,10 +253,9 @@ namespace OmgUtils.ApplicationSettingsManagement.Tests
             int convSetting = (int)setting;
 
             Assert.AreEqual(1.0f, convSetting);
-
         }
 
-            [TestMethod()]
+        [TestMethod()]
         public void SettingTestBoolFloatFalse()
         {
             const bool value = false;
@@ -343,7 +344,8 @@ namespace OmgUtils.ApplicationSettingsManagement.Tests
 
             Assert.AreEqual(value.ToString(), convSetting);
         }
-        #endregion
+
+        #endregion BOOL
 
         #region STRING
 
@@ -419,6 +421,74 @@ namespace OmgUtils.ApplicationSettingsManagement.Tests
             Assert.AreEqual(value, convSetting);
         }
 
-        #endregion
+        #endregion STRING
+
+        [TestMethod()]
+        public void SettingTestStringToString()
+        {
+            string expextedString = "mySetting=Hello";
+            const string value = "Hello";
+            var setting = new StringSetting()
+            {
+                Category = "none",
+                Description = "none",
+                HumanReadableName = "Test setting",
+                IdentificationName = "mySetting",
+                Value = value
+            };
+
+            Assert.AreEqual(expextedString, setting.ToString());
+        }
+
+        [TestMethod()]
+        public void SettingTestBoolToString()
+        {
+            string expextedString = "mySetting=True";
+            const bool value = true;
+            var setting = new BoolSetting()
+            {
+                Category = "none",
+                Description = "none",
+                HumanReadableName = "Test setting",
+                IdentificationName = "mySetting",
+                Value = value
+            };
+
+            Assert.AreEqual(expextedString, setting.ToString());
+        }
+
+        [TestMethod()]
+        public void SettingTestFloatToString()
+        {
+            string expextedString = "mySetting=14,44";
+            const float value = 14.44f;
+            var setting = new FloatSetting()
+            {
+                Category = "none",
+                Description = "none",
+                HumanReadableName = "Test setting",
+                IdentificationName = "mySetting",
+                Value = value
+            };
+
+            Assert.AreEqual(expextedString, setting.ToString());
+        }
+
+        [TestMethod()]
+        public void SettingTestIntToString()
+        {
+            string expextedString = "mySetting=345";
+            const int value = 345;
+            var setting = new FloatSetting()
+            {
+                Category = "none",
+                Description = "none",
+                HumanReadableName = "Test setting",
+                IdentificationName = "mySetting",
+                Value = value
+            };
+
+            Assert.AreEqual(expextedString, setting.ToString());
+        }
     }
 }
