@@ -54,6 +54,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationSettingsClass\SerializedSetting.cs" />
+    <Compile Include="ApplicationSettingsClass\SerializedSettingsManager.cs" />
     <Compile Include="ApplicationSettingsClass\Setting.cs" />
     <Compile Include="CFGFileParser.cs" />
     <Compile Include="Logger.cs" />
